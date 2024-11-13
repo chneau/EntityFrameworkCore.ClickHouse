@@ -11,24 +11,15 @@ namespace EntityFrameworkCore.ClickHouse.FunctionalTests.TestUtilities;
 
 public class ClickHouseTestStore : RelationalTestStore
 {
-    public ClickHouseTestStore(string name, bool shared) : base(name, shared)
+    public ClickHouseTestStore(string name, bool shared) : base(name, shared, new ClickHouseDbConnection(CreateConnectionString(name)))
     {
-        ConnectionString = CreateConnectionString(name);
-        var clickHouseDbConnection = new ClickHouseDbConnection(ConnectionString);
-        clickHouseDbConnection.CustomSettings.Add("allow_create_index_without_type", "1");
-
-        Connection = clickHouseDbConnection;
+        ((ClickHouseDbConnection)Connection).CustomSettings.Add("allow_create_index_without_type", "1");
     }
 
     public override DbContextOptionsBuilder AddProviderOptions(DbContextOptionsBuilder builder)
     {
         builder.LogTo(s => Debug.WriteLine(s));
         return builder.UseClickHouse(Connection);
-    }
-
-    public override void Clean(DbContext context)
-    {
-        context.Database.EnsureClean();
     }
 
     public int ExecuteNonQuery(string sql, params object[] parameters)
@@ -51,7 +42,7 @@ public class ClickHouseTestStore : RelationalTestStore
         }.ConnectionString;
     }
 
-    private DbCommand CreateCommand(string commandText, object[] parameters)
+    private ClickHouseCommand CreateCommand(string commandText, object[] parameters)
     {
         var command = (ClickHouseCommand)Connection.CreateCommand();
 

@@ -1543,7 +1543,7 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                     .HasReplacingMergeTreeEngine("ver", "is_deleted")
                     .WithPartitionBy("toYYYYMM(created_at)")
                     .WithPrimaryKey("id")
-                    .WithOrderBy("id","created_at")
+                    .WithOrderBy("id", "created_at")
                     .WithSampleBy("id")
                 );
             },
@@ -1804,6 +1804,11 @@ public class MigrationsClickHouseTest : MigrationsTestBase<MigrationsClickHouseT
                 var engine = table.GetTableEngine();
                 Assert.Equal(ClickHouseAnnotationNames.LogEngine, engine);
             });
+
+    public override Task Add_required_primitive_collection_with_custom_default_value_sql_to_existing_table()
+    {
+        throw new NotImplementedException();
+    }
 
     protected override string NonDefaultCollation { get; }
 
