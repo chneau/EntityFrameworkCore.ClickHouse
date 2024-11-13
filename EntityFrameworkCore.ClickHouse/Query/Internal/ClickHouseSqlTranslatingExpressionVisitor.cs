@@ -24,57 +24,6 @@ public class ClickHouseSqlTranslatingExpressionVisitor : RelationalSqlTranslatin
     {
     }
 
-    public override SqlExpression TranslateCount(SqlExpression sqlExpression)
-    {
-        return Dependencies.SqlExpressionFactory.Convert(
-            Dependencies.SqlExpressionFactory.ApplyDefaultTypeMapping(
-                Dependencies.SqlExpressionFactory.Function(
-                    "COUNT",
-                    [sqlExpression],
-                    false,
-                    [false],
-                    typeof(long)
-                )
-            ),
-            typeof(int),
-            Dependencies.TypeMappingSource.FindMapping(typeof(int))
-        );
-    }
-
-    public override SqlExpression TranslateLongCount(SqlExpression sqlExpression)
-    {
-        return Dependencies.SqlExpressionFactory.Convert(
-            Dependencies.SqlExpressionFactory.ApplyDefaultTypeMapping(
-                Dependencies.SqlExpressionFactory.Function(
-                    "COUNT",
-                    [sqlExpression],
-                    false,
-                    [false],
-                    typeof(ulong)
-                )
-            ),
-            typeof(int),
-            Dependencies.TypeMappingSource.FindMapping(typeof(int))
-        );
-    }
-
-    public override SqlExpression TranslateSum(SqlExpression sqlExpression)
-    {
-        return Dependencies.SqlExpressionFactory.Convert(
-            Dependencies.SqlExpressionFactory.ApplyDefaultTypeMapping(
-                Dependencies.SqlExpressionFactory.Function(
-                    "SUM",
-                    [sqlExpression],
-                    false,
-                    [false],
-                    typeof(long)
-                )
-            ),
-            typeof(int),
-            Dependencies.TypeMappingSource.FindMapping(typeof(int))
-        );
-    }
-
     protected override Expression VisitMember(MemberExpression memberExpression)
     {
         if (IsDateDiffExpression(memberExpression, out var left, out var right, out var unit))
